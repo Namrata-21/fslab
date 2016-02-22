@@ -25,33 +25,37 @@ private:string name;
         string branch;
         string sem;
 
-public:void pack();
+public:void pack(string filename);
        void read();
-	   void search();
+	   void search(string,string);
 	   void del();
 	   void modifiy();
-	   void unpack();
+	   void unpack(string);
 };
 fstream f1;
 int main()
 {
 	int choice;
 	student s;
-
-			while (1)
-
+	string fname,key;
+		while (1)
 			{
-				cout<<"select the choice 1.insert 2.search 3.del 4.modifiy";
+				cout<<"select the choice 1.insert 2.search 3.unpack 4.modifiy";
 											cin>>choice;
 			switch(choice)
 			{
 			case 1:s.read();
-			        s.pack();
+			cout<<"enter filename";
+			cin>>fname;
+			        s.pack(fname);
 			break;
-			//case 2:search();
-				//	break;
-			//case 3:del();
-				//	break;
+			case 2:
+				cout<<"enter usn to b searched\n";
+				cin>>key;
+				s.search(key,fname);
+					break;
+			//case 3:s.unpack();
+					//break;//
 			//case 4:modifiy();
 					//break;
 			}
@@ -68,14 +72,42 @@ void student::read()
 				cout<<"enter sem"<<endl;
 				cin>>sem;
 }
-void student::pack()
+void student::pack(string filename)
 {
-	string temp,i;
-	temp=usn+'|'+name+'|'+branch+'|'+sem;
-	temp.resize(100,'$');
-	f1.open("data.txt",ios::out|ios::app);
-	f1<<temp<<endl;
-	f1.close();
+	string buffer;
+	ofstream myf(filename.c_str(),ios::app);
+	buffer=usn+'|'+name+'|'+branch+'|'+sem;
+	buffer.resize(100,'$');
+	myf<<buffer<<endl;
+	myf.close();
 }
+void student::unpack(string fname)
+{
 
+	ifstream myf(fname.c_str());
+	getline(myf,usn,'|');
+	getline(myf,name,'|');
+	getline(myf,branch,'|');
+	getline(myf,sem,'|');
+	myf.close();
+}
+void student::search(string key,string fname)
+{
+	student s[10];
+	int i=0,count=0;
+	ifstream myf(fname.c_str());
+	while(!myf.eof())
+	{
+		cout<<"in search\n";
+		s[i].unpack(fname);
+	if(key==s[i].usn)
+	{
+		cout<<"record found\n";
+	cout<<s[i].usn<<"\t"<<s[i].name;
+	break;
+	}
+	i++;
+	}
+myf.close();
+}
 
